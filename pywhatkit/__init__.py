@@ -20,6 +20,7 @@ from pywhatkit.whats import (
     sendwhatmsg_to_group,
     sendwhatmsg_to_group_instantly,
     sendwhats_image,
+    sendWhatMsgToList,
 )
 
 if system().lower() in ("darwin", "windows"):
