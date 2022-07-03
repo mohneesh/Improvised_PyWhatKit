@@ -3,6 +3,7 @@ import webbrowser as web
 from datetime import datetime
 from re import fullmatch
 from urllib.parse import quote
+import random as r
 
 import pyautogui as pg
 
@@ -82,6 +83,35 @@ def sendwhatmsg(
     log.log_message(_time=current_time, receiver=phone_no, message=message)
     if tab_close:
         core.close_tab(wait_time=close_time)
+
+
+def sendWhatMsgToList(
+    phone_no_list: list,
+    message: str,
+    wait_time: int = 15,
+    tab_close: bool = False,
+    close_time: int = 3,
+) -> None:
+    for phone_no in phone_no_list:
+        """Send a WhatsApp Message at a Certain Time"""
+        if not core.check_number(number=phone_no):
+            raise exceptions.CountryCodeException("Country Code Missing in Phone Number!")
+
+        phone_no = phone_no.replace(" ", "")
+        if not fullmatch(r"^\+?[0-9]{2,4}[0-9]{10}$", phone_no):
+            raise exceptions.InvalidPhoneNumber("Invalid Phone Number.")
+
+        sleep_time = r.randint(20, 45)
+        print(
+            f"In {sleep_time} Seconds WhatsApp will open and after {wait_time} Seconds Message will be Delivered!"
+        )
+        time.sleep(sleep_time)
+        current_time = time.localtime()
+
+        core.send_message(message=message, receiver=phone_no, wait_time=wait_time)
+        log.log_message(_time=current_time, receiver=phone_no, message=message)
+        if tab_close:
+            core.close_tab(wait_time=close_time)
 
 
 def sendwhatmsg_to_group(
